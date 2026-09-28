@@ -88,7 +88,7 @@ In case above or below is used, the problem state needs to be numeric. Possible 
 ### 💬 <u>Message settings</u>
 
 * #### **Target** _(target)_ | no default
-  The target chats to which the alerts should be sent. The selector accepts event or notify entities from the Telegram bot integration. Event entities expose the chat id as an attribute; notify entities are resolved to their chat when the message is sent.
+  The target chats to which the alerts should be sent. The selector accepts event or notify entities from the Telegram bot integration. Event entities expose the chat id as an attribute; notify entities are also supported.
 
 * #### **Parse mode** _(parse_mode)_ | default: `markdown`
   This will determine the formatting of the message. By default `markdown` formatting is used, but you can also select `markdownv2`, `html` and `plain_text`. Note that `markdownv2` needs escaping of special characters and will otherwise result in an error.

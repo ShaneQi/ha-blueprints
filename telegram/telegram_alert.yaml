@@ -102,9 +102,9 @@ blueprint:
         target:
           name: Target
           description:
-            Select the telegram chats you want to target in this alert. The blueprint uses the event or notify
-            entities from the Telegram bot integration. For event entities it takes the chat_id from the entity
-            attribute; for notify entities the chat is resolved when the message is sent.
+            Select the telegram chats you want to target in this alert. The blueprint uses the event entities and
+            takes the chat_id from the attribute of these entities. Notify entities from the Telegram bot
+            integration are also supported.
           selector:
             entity:
               multiple: true
@@ -588,7 +588,7 @@ actions:
                     data:
                       config_entry_id: "{{ wait.trigger.event.data.bot.config_entry_id }}"
                       callback_query_id: "{{ wait.trigger.event.data.id }}"
-                      message: OK
+                      message: "OK"
                       show_alert: false
               - choose:
                   - conditions: "{{ wait.trigger.id == 'button_press' and wait.trigger.event.data.data == '/button_1_'~tag }}"
@@ -608,18 +608,14 @@ actions:
                           chat_id: "{{ wait.trigger.event.data.chat_id }}"
                           event_entity: >
                             {% set ns = namespace(entity='') %}
-                            {# Prefer message_data: notify entities do not expose chat_id as a state attribute. #}
                             {% for item in message_data %}
-                              {% if item.config_entry_id == config_entry
-                                   and item.chat_id | string == chat_id | string %}
+                              {% if item.config_entry_id == config_entry and item.chat_id | string == chat_id | string %}
                                 {% set ns.entity = item.event_entity %}
                               {% endif %}
                             {% endfor %}
                             {% if not ns.entity %}
                               {% for event in target %}
-                                {% if state_attr(event, 'chat_id') is not none
-                                     and config_entry_id(event) == config_entry
-                                     and state_attr(event, 'chat_id') | string == chat_id | string %}
+                                {% if state_attr(event, 'chat_id') is not none and config_entry_id(event) == config_entry and state_attr(event, 'chat_id') | string == chat_id | string %}
                                   {% set ns.entity = event %}
                                 {% endif %}
                               {% endfor %}
