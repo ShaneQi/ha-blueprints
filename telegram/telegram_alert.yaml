@@ -16,7 +16,7 @@ blueprint:
 
     ## ☕ Coffee
 
-    If you think I deserve a coffe, please feel free to buy me one (I might spend it on another beverage though).
+    If you think I deserve a coffee, please feel free to buy me one (I might spend it on another beverage though).
 
     In case you decide to do so, thanks a lot!
 
@@ -43,26 +43,25 @@ blueprint:
             entity: {}
         problem_state:
           name: Problem state
-          description: The state on which the enitity should be for the alert to be actvie
+          description: "State used with Problem type. For equal/not_equal compared as text; for above/below must be numeric."
           selector:
-            text:
+            text: {}
         attribute_key:
           name: Attribute name
           description:
-            The name of the attribute which should be used in the trigger. Only used when the
-            Use attribute setting is enabled.
+            The name of the attribute which should be used in the trigger.
 
             Make sure to use the key as shown in developer tools > states, not the one shown in e.g.
             the more-info card.
 
             Leave empty to use the state of the entity.
           selector:
-            text:
+            text: {}
           default: ""
         problem_type:
           name: Problem type
           description:
-            Indicate if the entity state should exactly match the problem state, or if should be above or below.
+            Indicate if the entity state should match the problem state, differ from it, or be above or below.
 
             In case above or below is used, the problem state needs to be numeric.
           selector:
@@ -70,6 +69,8 @@ blueprint:
               options:
                 - label: Entity state equal to problem state
                   value: equal
+                - label: Entity state not equal to problem state
+                  value: not_equal
                 - label: Entity state below problem state
                   value: below
                 - label: Entity state above problem state
@@ -104,7 +105,8 @@ blueprint:
           name: Target
           description:
             Select the telegram chats you want to target in this alert. The blueprint uses the event entities and
-            takes the chat_id from the attribute of these entities.
+            takes the chat_id from the attribute of these entities. Notify entities from the Telegram bot
+            integration are also supported.
           selector:
             entity:
               multiple: true
@@ -130,18 +132,18 @@ blueprint:
             The title for the message which is sent on every repeat of the alert.
             You can use templates in this title.
           selector:
-            template:
+            template: {}
         alert_message:
           name: Alert message
           description: The message which is sent on every repeat of the alert.
             You can use templates in this message.
           selector:
-            template:
+            template: {}
         disable_web_page_preview:
           name: Disable web page preview
           description: Enable to disable link previews for links in the message.
           selector:
-            boolean:
+            boolean: {}
           default: false
     done_settings:
       name: Done message settings
@@ -152,7 +154,7 @@ blueprint:
           name: Done message
           description: The message which should be sent in case the alert is no longer active
           selector:
-            template:
+            template: {}
           default: ""
         use_done_title:
           name: Use alert title on done message
@@ -160,7 +162,7 @@ blueprint:
             When enabled it will add the alert title as title to the done
             message
           selector:
-            boolean:
+            boolean: {}
           default: true
     acknowledge_settings:
       name: Acknowledge settings
@@ -176,31 +178,31 @@ blueprint:
             When enabled it shows a button below the alert message to turn the
             alert off until it's triggered again.
           selector:
-            boolean:
+            boolean: {}
           default: false
         acknowledge_button_label:
-          name: Acknowlegde button label
+          name: Acknowledge button label
           description:
             The text to be shown on the button to acknowledge the alert.
             For example "Stop bugging me"
           selector:
-            text:
-          default: Acknowlegde alert
+            text: {}
+          default: Acknowledge alert
         acknowledge_message:
           name: Acknowledge message
           description:
             Message which will be sent as confirmation that the alert is now
             acknowledged. Leave empty when you don't want a message sent.
           selector:
-            template:
+            template: {}
           default: ""
         use_ack_title:
           name: Use alert title on acknowledgement
           description:
-            When enabled it will add the alert title as title to the acknowlege
+            When enabled it will add the alert title as title to the acknowledge
             message
           selector:
-            boolean:
+            boolean: {}
           default: true
     message_cleanup:
       name: Message cleanup settings
@@ -214,15 +216,15 @@ blueprint:
           name: Remove previous message
           description: Automatically remove the previous alert message when a new message is sent
           selector:
-            boolean:
+            boolean: {}
           default: true
         remove_when_done:
           name: Remove when done
           description:
-            Automatically remove the alert messages when a the trigger entity is no longer in de problem
+            Automatically remove the alert messages when the trigger entity is no longer in the problem
             state or when the alert is acknowledged
           selector:
-            boolean:
+            boolean: {}
           default: true
     actionable_buttons:
       name: Actionable button settings
@@ -245,7 +247,7 @@ blueprint:
           name: Button 1 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_2_label:
           name: Button 2 label
@@ -258,7 +260,7 @@ blueprint:
           name: Button 2 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_3_label:
           name: Button 3 label
@@ -271,7 +273,7 @@ blueprint:
           name: Button 3 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_4_label:
           name: Button 4 label
@@ -284,7 +286,7 @@ blueprint:
           name: Button 4 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_5_label:
           name: Button 5 label
@@ -297,7 +299,7 @@ blueprint:
           name: Button 5 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
     alert_sensor_data:
       name: Alert sensor data
@@ -327,7 +329,7 @@ blueprint:
             In case you didn't change this while setting up the alert data sensor, you can just
             keep the default setting.
           selector:
-            text:
+            text: {}
           default: update_thefes_alert_sensor
 trigger_variables:
   attribute_key: !input attribute_key
@@ -342,6 +344,8 @@ triggers:
       {% set entity_value = state_attr(trigger_entity, attribute_key) if use_attribute else states(trigger_entity) %}
       {% if problem_type == 'equal' %}
         {% set is_problem = entity_value | string == problem_state %}
+      {% elif problem_type == 'not_equal' %}
+        {% set is_problem = entity_value | string != problem_state %}
       {% elif problem_type == 'below' %}
         {% set is_problem =
           entity_value | is_number
@@ -360,7 +364,7 @@ triggers:
     trigger: homeassistant
     event: start
     id: restart
-  - alias: Trigger on automation reload in case the automation was changes
+  - alias: Trigger on automation reload in case the automation was changed
     trigger: event
     event_type: automation_reloaded
     id: restart
@@ -491,7 +495,7 @@ actions:
         - alias: Check if there still is a problem
           variables:
             is_problem: *is_problem
-        - alias: Check if alert needs to be sent, skip the first alert if skip_first is set to false
+        - alias: Check if alert needs to be sent, skip the first alert if skip_first is set to true
           if: >
             {{
               (alert_count > 1 or not skip_first) 
@@ -559,6 +563,8 @@ actions:
                       {% set entity_value = state_attr(trigger_entity, attribute_key) if use_attribute else states(trigger_entity) %}
                       {% if problem_type == 'equal' %}
                         {% set is_problem = entity_value | string == problem_state %}
+                      {% elif problem_type == 'not_equal' %}
+                        {% set is_problem = entity_value | string != problem_state %}
                       {% elif problem_type == 'below' %}
                         {% set is_problem =
                           entity_value | is_number
@@ -581,6 +587,15 @@ actions:
                       if is_problem
                       else 0
                     }}
+              - alias: Answer Telegram callback query for keyboard button presses
+                if: "{{ wait.trigger is not none and wait.trigger.id == 'button_press' }}"
+                then:
+                  - action: telegram_bot.answer_callback_query
+                    data:
+                      config_entry_id: "{{ wait.trigger.event.data.bot.config_entry_id }}"
+                      callback_query_id: "{{ wait.trigger.event.data.id }}"
+                      message: "OK"
+                      show_alert: false
               - choose:
                   - conditions: "{{ wait.trigger.id == 'button_press' and wait.trigger.event.data.data == '/button_1_'~tag }}"
                     sequence: !input button_1_actions
@@ -598,11 +613,20 @@ actions:
                           config_entry: "{{ wait.trigger.event.data.bot.config_entry_id }}"
                           chat_id: "{{ wait.trigger.event.data.chat_id }}"
                           event_entity: >
-                            {% set ns = namespace(mapping=[]) %}
-                            {% for event in target %}
-                              {% set ns.mapping = ns.mapping + [dict(event=event, test=config_entry_id(event)~state_attr(event, 'chat_id'))] %}
+                            {% set ns = namespace(entity='') %}
+                            {% for item in message_data %}
+                              {% if item.config_entry_id == config_entry and item.chat_id | string == chat_id | string %}
+                                {% set ns.entity = item.event_entity %}
+                              {% endif %}
                             {% endfor %}
-                            {{ ns.mapping | selectattr('test', 'eq', config_entry~chat_id) | map(attribute='event') | first | default }}
+                            {% if not ns.entity %}
+                              {% for event in target %}
+                                {% if state_attr(event, 'chat_id') is not none and config_entry_id(event) == config_entry and state_attr(event, 'chat_id') | string == chat_id | string %}
+                                  {% set ns.entity = event %}
+                                {% endif %}
+                              {% endfor %}
+                            {% endif %}
+                            {{ ns.entity }}
                       - alias: Delete previously for this chat if there were any
                         repeat:
                           for_each: "{{ message_data | selectattr('event_entity', 'eq', event_entity) | list if remove_when_done else [] }}"
@@ -626,20 +650,16 @@ actions:
                               message: "{{ acknowledge_message }}"
                               parse_mode: !input parse_mode
                               disable_web_page_preview: !input disable_web_page_preview
-                      - alias: Remove this entry for the recipent list
+                      - alias: Remove this entry from the recipient list
                         variables:
                           target: "{{ target | reject('eq', event_entity) | list }}"
                           repeat_needed: "{{ target | count > 0 }}"
                       - if: "{{ not repeat_needed }}"
                         then:
                           - alias: Stop the repeat loop waiting for the button presses and entity state change
-                            stop: "Alert ({{ alert_title }}) acknowlwedged"
+                            stop: "Alert ({{ alert_title }}) acknowledged"
                   - conditions: "{{ wait.trigger.id == 'done' }}"
                     sequence:
-                      - alias: Delete previously sent alerts if there were any
-                        repeat:
-                          for_each: "{{ message_data if remove_when_done else [] }}"
-                          sequence: *delete_message
                       - alias: Send done message if provided
                         if: "{{ message_data | count > 0 and done_message != '' }}"
                         then:
@@ -656,6 +676,10 @@ actions:
                                     message: "{{ done_message }}"
                                     parse_mode: !input parse_mode
                                     disable_web_page_preview: !input disable_web_page_preview
+                      - alias: Delete previously sent alerts if there were any
+                        repeat:
+                          for_each: "{{ message_data if remove_when_done else [] }}"
+                          sequence: *delete_message
                       - alias: Remove data from the sensor
                         if: "{{ alert_data_sensor is not none }}"
                         then:
@@ -663,7 +687,7 @@ actions:
                             event: !input alert_event
                             event_data:
                               alert_data: "{{ {tag: {}} }}"
-                      - alias: Inidcate that alert is no londer needed
+                      - alias: Indicate that alert is no longer needed
                         variables:
                           repeat_needed: false
                       - alias: Stop the repeat loop waiting for the button presses and entity state change
