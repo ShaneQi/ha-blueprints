@@ -11,7 +11,7 @@ This blueprint is intended as a replacement for the [alert](<https://www.home-as
 ### 🫶 It supports these features of the alert integration:
 - Start alert when the state of an entity goes to a certain problem state
 - Provide a fixed number of minutes the alert should be repeated, or a list of numbers for a variable interval
-- Optionally skip the first message, .so it won’t be sent immediately when the entity changes to the problem state
+- Optionally skip the first message, so it won’t be sent immediately when the entity changes to the problem state
 - Provide an option to acknowledge an alert before the entity is no longer in the problem state
 - Send a message when the entity changes state, to indicate it is no longer in the problem state
 
@@ -87,9 +87,6 @@ In case above or below is used, the problem state needs to be numeric. Possible 
 
 ### 💬 <u>Message settings</u>
 
-* #### **Telegram bot config entry** _(config_entry)_ | default: `none`
-  The config entry of the telegram bot to use, this is not required if you only have one Telegram bot configured.
-
 * #### **Target** _(target)_ | no default
   The target chats to which the alerts should be sent. The selector is using the event entities as created by the Telegram bot integration. These entities have the chat id of the Telegram chat as an attribute, so in the end those chat id's are used as target of the alert messages.
 
@@ -103,7 +100,7 @@ In case above or below is used, the problem state needs to be numeric. Possible 
   The message which is sent on every repeat of the alert message. Jinja templates are allowed, but you can also use plain text.
 
 * #### **Disable web page preview** _(disable_web_page_preview)_ | default: `false`
-  When disabled the alert message will not display previews of web pages in case an website url is sent in the message.
+  When enabled the alert message will not display previews of web pages in case a website url is sent in the message.
 
 ### ✅ <u>Done message settings</u>
 
@@ -160,7 +157,7 @@ You can add a maximum of 5 buttons. Below you see the description of button 1, b
 
 ## ☕ Coffee
 
-If you think I deserve a coffe, please feel free to buy me one (I might spend it on another beverage though).
+If you think I deserve a coffee, please feel free to buy me one (I might spend it on another beverage though).
 In case you decide to do so, thanks a lot!
 
 <a href="https://www.buymeacoffee.com/thefes" target="_blank">![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)</a>

@@ -16,7 +16,7 @@ blueprint:
 
     ## ☕ Coffee
 
-    If you think I deserve a coffe, please feel free to buy me one (I might spend it on another beverage though).
+    If you think I deserve a coffee, please feel free to buy me one (I might spend it on another beverage though).
 
     In case you decide to do so, thanks a lot!
 
@@ -43,14 +43,13 @@ blueprint:
             entity: {}
         problem_state:
           name: Problem state
-          description: The state on which the enitity should be for the alert to be actvie
+          description: The state on which the entity should be for the alert to be active
           selector:
             text:
         attribute_key:
           name: Attribute name
           description:
-            The name of the attribute which should be used in the trigger. Only used when the
-            Use attribute setting is enabled.
+            The name of the attribute which should be used in the trigger.
 
             Make sure to use the key as shown in developer tools > states, not the one shown in e.g.
             the more-info card.
@@ -179,13 +178,13 @@ blueprint:
             boolean:
           default: false
         acknowledge_button_label:
-          name: Acknowlegde button label
+          name: Acknowledge button label
           description:
             The text to be shown on the button to acknowledge the alert.
             For example "Stop bugging me"
           selector:
             text:
-          default: Acknowlegde alert
+          default: Acknowledge alert
         acknowledge_message:
           name: Acknowledge message
           description:
@@ -197,7 +196,7 @@ blueprint:
         use_ack_title:
           name: Use alert title on acknowledgement
           description:
-            When enabled it will add the alert title as title to the acknowlege
+            When enabled it will add the alert title as title to the acknowledge
             message
           selector:
             boolean:
@@ -219,7 +218,7 @@ blueprint:
         remove_when_done:
           name: Remove when done
           description:
-            Automatically remove the alert messages when a the trigger entity is no longer in de problem
+            Automatically remove the alert messages when the trigger entity is no longer in the problem
             state or when the alert is acknowledged
           selector:
             boolean:
@@ -360,7 +359,7 @@ triggers:
     trigger: homeassistant
     event: start
     id: restart
-  - alias: Trigger on automation reload in case the automation was changes
+  - alias: Trigger on automation reload in case the automation was changed
     trigger: event
     event_type: automation_reloaded
     id: restart
@@ -491,7 +490,7 @@ actions:
         - alias: Check if there still is a problem
           variables:
             is_problem: *is_problem
-        - alias: Check if alert needs to be sent, skip the first alert if skip_first is set to false
+        - alias: Check if alert needs to be sent, skip the first alert if skip_first is set to true
           if: >
             {{
               (alert_count > 1 or not skip_first) 
@@ -626,20 +625,16 @@ actions:
                               message: "{{ acknowledge_message }}"
                               parse_mode: !input parse_mode
                               disable_web_page_preview: !input disable_web_page_preview
-                      - alias: Remove this entry for the recipent list
+                      - alias: Remove this entry from the recipient list
                         variables:
                           target: "{{ target | reject('eq', event_entity) | list }}"
                           repeat_needed: "{{ target | count > 0 }}"
                       - if: "{{ not repeat_needed }}"
                         then:
                           - alias: Stop the repeat loop waiting for the button presses and entity state change
-                            stop: "Alert ({{ alert_title }}) acknowlwedged"
+                            stop: "Alert ({{ alert_title }}) acknowledged"
                   - conditions: "{{ wait.trigger.id == 'done' }}"
                     sequence:
-                      - alias: Delete previously sent alerts if there were any
-                        repeat:
-                          for_each: "{{ message_data if remove_when_done else [] }}"
-                          sequence: *delete_message
                       - alias: Send done message if provided
                         if: "{{ message_data | count > 0 and done_message != '' }}"
                         then:
@@ -656,6 +651,10 @@ actions:
                                     message: "{{ done_message }}"
                                     parse_mode: !input parse_mode
                                     disable_web_page_preview: !input disable_web_page_preview
+                      - alias: Delete previously sent alerts if there were any
+                        repeat:
+                          for_each: "{{ message_data if remove_when_done else [] }}"
+                          sequence: *delete_message
                       - alias: Remove data from the sensor
                         if: "{{ alert_data_sensor is not none }}"
                         then:
@@ -663,7 +662,7 @@ actions:
                             event: !input alert_event
                             event_data:
                               alert_data: "{{ {tag: {}} }}"
-                      - alias: Inidcate that alert is no londer needed
+                      - alias: Indicate that alert is no longer needed
                         variables:
                           repeat_needed: false
                       - alias: Stop the repeat loop waiting for the button presses and entity state change
