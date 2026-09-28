@@ -43,11 +43,9 @@ blueprint:
             entity: {}
         problem_state:
           name: Problem state
-          description:
-            The state used with Problem type to decide if the alert is active.
-            For equal/not equal this is compared as text; for above/below it must be numeric.
+          description: "State used with Problem type. For equal/not_equal compared as text; for above/below must be numeric."
           selector:
-            text:
+            text: {}
         attribute_key:
           name: Attribute name
           description:
@@ -58,7 +56,7 @@ blueprint:
 
             Leave empty to use the state of the entity.
           selector:
-            text:
+            text: {}
           default: ""
         problem_type:
           name: Problem type
@@ -134,18 +132,18 @@ blueprint:
             The title for the message which is sent on every repeat of the alert.
             You can use templates in this title.
           selector:
-            template:
+            template: {}
         alert_message:
           name: Alert message
           description: The message which is sent on every repeat of the alert.
             You can use templates in this message.
           selector:
-            template:
+            template: {}
         disable_web_page_preview:
           name: Disable web page preview
           description: Enable to disable link previews for links in the message.
           selector:
-            boolean:
+            boolean: {}
           default: false
     done_settings:
       name: Done message settings
@@ -156,7 +154,7 @@ blueprint:
           name: Done message
           description: The message which should be sent in case the alert is no longer active
           selector:
-            template:
+            template: {}
           default: ""
         use_done_title:
           name: Use alert title on done message
@@ -164,7 +162,7 @@ blueprint:
             When enabled it will add the alert title as title to the done
             message
           selector:
-            boolean:
+            boolean: {}
           default: true
     acknowledge_settings:
       name: Acknowledge settings
@@ -180,7 +178,7 @@ blueprint:
             When enabled it shows a button below the alert message to turn the
             alert off until it's triggered again.
           selector:
-            boolean:
+            boolean: {}
           default: false
         acknowledge_button_label:
           name: Acknowledge button label
@@ -188,7 +186,7 @@ blueprint:
             The text to be shown on the button to acknowledge the alert.
             For example "Stop bugging me"
           selector:
-            text:
+            text: {}
           default: Acknowledge alert
         acknowledge_message:
           name: Acknowledge message
@@ -196,7 +194,7 @@ blueprint:
             Message which will be sent as confirmation that the alert is now
             acknowledged. Leave empty when you don't want a message sent.
           selector:
-            template:
+            template: {}
           default: ""
         use_ack_title:
           name: Use alert title on acknowledgement
@@ -204,7 +202,7 @@ blueprint:
             When enabled it will add the alert title as title to the acknowledge
             message
           selector:
-            boolean:
+            boolean: {}
           default: true
     message_cleanup:
       name: Message cleanup settings
@@ -218,7 +216,7 @@ blueprint:
           name: Remove previous message
           description: Automatically remove the previous alert message when a new message is sent
           selector:
-            boolean:
+            boolean: {}
           default: true
         remove_when_done:
           name: Remove when done
@@ -226,7 +224,7 @@ blueprint:
             Automatically remove the alert messages when the trigger entity is no longer in the problem
             state or when the alert is acknowledged
           selector:
-            boolean:
+            boolean: {}
           default: true
     actionable_buttons:
       name: Actionable button settings
@@ -249,7 +247,7 @@ blueprint:
           name: Button 1 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_2_label:
           name: Button 2 label
@@ -262,7 +260,7 @@ blueprint:
           name: Button 2 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_3_label:
           name: Button 3 label
@@ -275,7 +273,7 @@ blueprint:
           name: Button 3 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_4_label:
           name: Button 4 label
@@ -288,7 +286,7 @@ blueprint:
           name: Button 4 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
         button_5_label:
           name: Button 5 label
@@ -301,7 +299,7 @@ blueprint:
           name: Button 5 actions
           description: The actions to be performed when the button is pressed
           selector:
-            action:
+            action: {}
           default: []
     alert_sensor_data:
       name: Alert sensor data
@@ -331,7 +329,7 @@ blueprint:
             In case you didn't change this while setting up the alert data sensor, you can just
             keep the default setting.
           selector:
-            text:
+            text: {}
           default: update_thefes_alert_sensor
 trigger_variables:
   attribute_key: !input attribute_key
