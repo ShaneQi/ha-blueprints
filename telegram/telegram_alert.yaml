@@ -641,8 +641,8 @@ actions:
                               disable_web_page_preview: !input disable_web_page_preview
                       - alias: Remove this entry from the recipient list
                         variables:
-                          target: "{{ target | reject('eq', event_entity) | list if event_entity else target }}"
-                          repeat_needed: "{{ (target | reject('eq', event_entity) | list | count > 0) if event_entity else true }}"
+                          target: "{{ target | reject('eq', event_entity) | list }}"
+                          repeat_needed: "{{ target | count > 0 }}"
                       - if: "{{ not repeat_needed }}"
                         then:
                           - alias: Stop the repeat loop waiting for the button presses and entity state change
