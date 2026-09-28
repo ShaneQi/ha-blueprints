@@ -43,7 +43,9 @@ blueprint:
             entity: {}
         problem_state:
           name: Problem state
-          description: The state on which the entity should be for the alert to be active
+          description:
+            The state used with Problem type to decide if the alert is active.
+            For equal/not equal this is compared as text; for above/below it must be numeric.
           selector:
             text:
         attribute_key:
@@ -61,7 +63,7 @@ blueprint:
         problem_type:
           name: Problem type
           description:
-            Indicate if the entity state should exactly match the problem state, or if should be above or below.
+            Indicate if the entity state should match the problem state, differ from it, or be above or below.
 
             In case above or below is used, the problem state needs to be numeric.
           selector:
@@ -69,6 +71,8 @@ blueprint:
               options:
                 - label: Entity state equal to problem state
                   value: equal
+                - label: Entity state not equal to problem state
+                  value: not_equal
                 - label: Entity state below problem state
                   value: below
                 - label: Entity state above problem state
@@ -342,6 +346,8 @@ triggers:
       {% set entity_value = state_attr(trigger_entity, attribute_key) if use_attribute else states(trigger_entity) %}
       {% if problem_type == 'equal' %}
         {% set is_problem = entity_value | string == problem_state %}
+      {% elif problem_type == 'not_equal' %}
+        {% set is_problem = entity_value | string != problem_state %}
       {% elif problem_type == 'below' %}
         {% set is_problem =
           entity_value | is_number
@@ -559,6 +565,8 @@ actions:
                       {% set entity_value = state_attr(trigger_entity, attribute_key) if use_attribute else states(trigger_entity) %}
                       {% if problem_type == 'equal' %}
                         {% set is_problem = entity_value | string == problem_state %}
+                      {% elif problem_type == 'not_equal' %}
+                        {% set is_problem = entity_value | string != problem_state %}
                       {% elif problem_type == 'below' %}
                         {% set is_problem =
                           entity_value | is_number
