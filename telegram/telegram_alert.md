@@ -11,7 +11,7 @@ This blueprint is intended as a replacement for the [alert](<https://www.home-as
 ### 🫶 It supports these features of the alert integration:
 - Start alert when the state of an entity goes to a certain problem state
 - Provide a fixed number of minutes the alert should be repeated, or a list of numbers for a variable interval
-- Optionally skip the first message, .so it won’t be sent immediately when the entity changes to the problem state
+- Optionally skip the first message, so it won’t be sent immediately when the entity changes to the problem state
 - Provide an option to acknowledge an alert before the entity is no longer in the problem state
 - Send a message when the entity changes state, to indicate it is no longer in the problem state
 
@@ -160,7 +160,7 @@ You can add a maximum of 5 buttons. Below you see the description of button 1, b
 
 ## ☕ Coffee
 
-If you think I deserve a coffe, please feel free to buy me one (I might spend it on another beverage though).
+If you think I deserve a coffee, please feel free to buy me one (I might spend it on another beverage though).
 In case you decide to do so, thanks a lot!
 
 <a href="https://www.buymeacoffee.com/thefes" target="_blank">![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)</a>
