@@ -27,7 +27,7 @@ This blueprint is intended as a replacement for the [alert](<https://www.home-as
 - After restarting Home Assistant or modifying the automation, messages may be sent for alerts previously acknowledged but still in the problem state
 - After restarting Home Assistant, automations will no longer clean up previous alert messages that were active before the restart.
 
-_Note: these limitation can be addressed by saving the alert data in a trigger based template sensor. So I've included support for this, and created a blueprint to create this template sensor._
+_Note: these limitations can be addressed by saving the alert data in a trigger-based template sensor. So I've included support for this, and created a blueprint to create this template sensor._
 _If you want to use this template sensor, first create it using the [instructions](/other/alert_data_sensor.md). After creation you can select it in the `Alert sensor settings` in the blueprint._
 
 ### 👇 Example:
@@ -48,19 +48,19 @@ The text between brackets is the key for the input used in YAML.
 ### 🏴 <u>Trigger settings</u>
 
 * #### **Trigger entity**  _(trigger_entity)_ | no default
-  The entity which state will be monitored to start the alert. 
+  The entity whose state will be monitored to start the alert. 
 
 
 * #### **Problem state** _(problem_state)_  | no default
-  The state the trigger entity needs to change to to start the alert. Note that if the entity is already in this state when the automation is created, the alert will not start, it has to change to the state to start the alert.
+  The state the trigger entity needs to change to for the alert to start. Note that if the entity is already in this state when the automation is created, the alert will not start; it has to change to the state to start the alert.
 
 * #### **Attribute name** _(attribute_key)_  | default: `""`
   You can optionally provide an attribute name so the alert will not trigger on the state of the entity, but on an attribute value. It will use the problem state provided, in combination with the attribute name. This has to be the attribute as shown in developer tools > states, do not use the value from e.g. a more-info card, as they make changes to the name (for example the first character is capitalized).
   When left empty, the state of the entity will be used.
 
 * #### **Problem type** _(problem_type)_  | default: `"equal"`
-Indicate if the entity state should exactly match the problem state, or if should be above or below.
-In case above or below is used, the problem state needs to be numeric. Possible options are:
+  Indicate if the entity state should exactly match the problem state, or if it should be above or below.
+  In case above or below is used, the problem state needs to be numeric. Possible options are:
   - Entity state equal to problem state _(equal)_
   - Entity state below problem state _(below)_
   - Entity state above problem state _(above)_
@@ -103,7 +103,7 @@ In case above or below is used, the problem state needs to be numeric. Possible 
   The message which is sent on every repeat of the alert message. Jinja templates are allowed, but you can also use plain text.
 
 * #### **Disable web page preview** _(disable_web_page_preview)_ | default: `false`
-  When disabled the alert message will not display previews of web pages in case an website url is sent in the message.
+  When disabled the alert message will not display previews of web pages in case a website URL is sent in the message.
 
 ### ✅ <u>Done message settings</u>
 
