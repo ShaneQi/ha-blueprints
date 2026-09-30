@@ -542,7 +542,7 @@ actions:
                                 | combine(
                                     dict(
                                       config_entry_id=config_entry_id(repeat.item),
-                                      event_entity=repeat.item,
+                                      entity_id=repeat.item,
                                       id=message_data | count + 1
                                     )
                                   )
@@ -615,11 +615,11 @@ actions:
                       - variables:
                           config_entry: "{{ wait.trigger.event.data.bot.config_entry_id }}"
                           chat_id: "{{ wait.trigger.event.data.chat_id }}"
-                          event_entity: >
+                          entity_id: >
                             {% set ns = namespace(entity='') %}
                             {% for item in message_data %}
                               {% if item.config_entry_id == config_entry and item.chat_id | string == chat_id | string %}
-                                {% set ns.entity = item.event_entity %}
+                                {% set ns.entity = item.entity_id %}
                               {% endif %}
                             {% endfor %}
                             {% if not ns.entity %}
@@ -632,7 +632,7 @@ actions:
                             {{ ns.entity }}
                       - alias: Delete previously for this chat if there were any
                         repeat:
-                          for_each: "{{ message_data | selectattr('event_entity', 'eq', event_entity) | list if remove_when_done else [] }}"
+                          for_each: "{{ message_data | selectattr('entity_id', 'eq', entity_id) | list if remove_when_done else [] }}"
                           sequence: *delete_message
                       - alias: Send alert data to sensor if provided
                         if: "{{ alert_data_sensor is not none }}"
@@ -655,7 +655,7 @@ actions:
                               disable_web_page_preview: !input disable_web_page_preview
                       - alias: Remove this entry from the recipient list
                         variables:
-                          target: "{{ target | reject('eq', event_entity) | list }}"
+                          target: "{{ target | reject('eq', entity_id) | list }}"
                           repeat_needed: "{{ target | count > 0 }}"
                       - if: "{{ not repeat_needed }}"
                         then:
