@@ -614,7 +614,7 @@ actions:
                       - variables:
                           config_entry: "{{ wait.trigger.event.data.bot.config_entry_id }}"
                           chat_id: "{{ wait.trigger.event.data.chat_id }}"
-                          chat_messages: >
+                          chat_messages_to_delete: >
                             {% set ns = namespace(items=[]) %}
                             {% for item in message_data %}
                               {% if item.config_entry_id == config_entry and item.chat_id | string == chat_id | string %}
@@ -622,10 +622,10 @@ actions:
                               {% endif %}
                             {% endfor %}
                             {{ ns.items }}
-                          entity_id: "{{ chat_messages[0].entity_id if chat_messages | count > 0 else '' }}"
+                          entity_id: "{{ chat_messages_to_delete[0].entity_id if chat_messages_to_delete | count > 0 else '' }}"
                       - alias: Delete previously for this chat if there were any
                         repeat:
-                          for_each: "{{ chat_messages if remove_when_done else [] }}"
+                          for_each: "{{ chat_messages_to_delete if remove_when_done else [] }}"
                           sequence: *delete_message
                       - alias: Send alert data to sensor if provided
                         if: "{{ alert_data_sensor is not none }}"
