@@ -532,16 +532,16 @@ actions:
                       message_data: >
                         {# response.chats items are Home Assistant send-response objects
                            (chat_id, message_id, and entity_id when sent via a notify entity),
-                           not raw Telegram Chat objects. Keep the full response entry. #}
-                        {% set sent = response.chats | first %}
-                        {% set target_entity = sent.entity_id | default(repeat.item, true) %}
+                           not raw Telegram Chat objects. Keep the full response entry.
+                           repeat.item is the selected target (notify or event entity). #}
                         {{
                           message_data
                           + [
-                              sent
+                              response.chats
+                                | first
                                 | combine(
                                     dict(
-                                      config_entry_id=config_entry_id(target_entity),
+                                      config_entry_id=config_entry_id(repeat.item),
                                       event_entity=repeat.item,
                                       id=message_data | count + 1
                                     )
