@@ -614,19 +614,14 @@ actions:
                       - variables:
                           config_entry: "{{ wait.trigger.event.data.bot.config_entry_id }}"
                           chat_id: "{{ wait.trigger.event.data.chat_id }}"
-                          chat_messages_to_delete: >
-                            {% set ns = namespace(items=[]) %}
+                          entity_id: >
+                            {% set ns = namespace(entity='') %}
                             {% for item in message_data %}
                               {% if item.config_entry_id == config_entry and item.chat_id | string == chat_id | string %}
-                                {% set ns.items = ns.items + [item] %}
+                                {% set ns.entity = item.entity_id %}
                               {% endif %}
                             {% endfor %}
-                            {{ ns.items }}
-                          entity_id: >
-                            {% if chat_messages_to_delete | count > 0 %}
-                              {{ chat_messages_to_delete[0].entity_id }}
-                            {% else %}
-                              {% set ns = namespace(entity='') %}
+                            {% if not ns.entity %}
                               {% for item in target %}
                                 {% if state_attr(item, 'chat_id') is not none
                                      and config_entry_id(item) == config_entry
@@ -634,11 +629,11 @@ actions:
                                   {% set ns.entity = item %}
                                 {% endif %}
                               {% endfor %}
-                              {{ ns.entity }}
                             {% endif %}
+                            {{ ns.entity }}
                       - alias: Delete previously for this chat if there were any
                         repeat:
-                          for_each: "{{ chat_messages_to_delete if remove_when_done else [] }}"
+                          for_each: "{{ message_data | selectattr('entity_id', 'eq', entity_id) | list if remove_when_done and entity_id else [] }}"
                           sequence: *delete_message
                       - alias: Send alert data to sensor if provided
                         if: "{{ alert_data_sensor is not none }}"
