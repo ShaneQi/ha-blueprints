@@ -533,10 +533,6 @@ actions:
                   - alias: Store message info
                     variables:
                       message_data: >
-                        {# response.chats items are Home Assistant send-response objects
-                           (chat_id, message_id, and entity_id when sent via a notify entity),
-                           not raw Telegram Chat objects. Keep the full response entry.
-                           repeat.item is the selected target (notify or event entity). #}
                         {{
                           message_data
                           + [
