@@ -622,7 +622,20 @@ actions:
                               {% endif %}
                             {% endfor %}
                             {{ ns.items }}
-                          entity_id: "{{ chat_messages_to_delete[0].entity_id if chat_messages_to_delete | count > 0 else '' }}"
+                          entity_id: >
+                            {% if chat_messages_to_delete | count > 0 %}
+                              {{ chat_messages_to_delete[0].entity_id }}
+                            {% else %}
+                              {% set ns = namespace(entity='') %}
+                              {% for item in target %}
+                                {% if state_attr(item, 'chat_id') is not none
+                                     and config_entry_id(item) == config_entry
+                                     and state_attr(item, 'chat_id') | string == chat_id | string %}
+                                  {% set ns.entity = item %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ ns.entity }}
+                            {% endif %}
                       - alias: Delete previously for this chat if there were any
                         repeat:
                           for_each: "{{ chat_messages_to_delete if remove_when_done else [] }}"
