@@ -368,6 +368,9 @@ triggers:
 variables:
   target: !input target
   alert_title: !input alert_title
+  alert_message: !input alert_message
+  parse_mode: !input parse_mode
+  disable_web_page_preview: !input disable_web_page_preview
   skip_first: !input skip_first
   can_acknowledge: !input can_acknowledge
   done_message: !input done_message
@@ -503,30 +506,30 @@ actions:
             - repeat:
                 for_each: "{{ target }}"
                 sequence:
-                  - alias: Send the alert to the provided chat id
-                    choose:
-                      - conditions: "{{ repeat.item.startswith('notify.') }}"
-                        sequence:
-                          - action: telegram_bot.send_message
-                            data:
-                              entity_id: "{{ repeat.item }}"
-                              title: !input alert_title
-                              message: !input alert_message
-                              inline_keyboard: "{{ inline_keyboard }}"
-                              parse_mode: !input parse_mode
-                              disable_web_page_preview: !input disable_web_page_preview
-                            response_variable: response
-                    default:
-                      - action: telegram_bot.send_message
-                        data:
-                          config_entry_id: "{{ config_entry_id(repeat.item) }}"
-                          chat_id: "{{ state_attr(repeat.item, 'chat_id') }}"
-                          title: !input alert_title
-                          message: !input alert_message
-                          inline_keyboard: "{{ inline_keyboard }}"
-                          parse_mode: !input parse_mode
-                          disable_web_page_preview: !input disable_web_page_preview
-                        response_variable: response
+                  - alias: Build telegram target fields for notify or event entity
+                    variables:
+                      telegram_target: >
+                        {{
+                          {'entity_id': repeat.item}
+                          if repeat.item.startswith('notify.')
+                          else {
+                            'config_entry_id': config_entry_id(repeat.item),
+                            'chat_id': state_attr(repeat.item, 'chat_id')
+                          }
+                        }}
+                  - alias: Send the alert to the provided target
+                    action: telegram_bot.send_message
+                    data: >
+                      {{
+                        telegram_target | combine({
+                          'title': alert_title,
+                          'message': alert_message,
+                          'inline_keyboard': inline_keyboard,
+                          'parse_mode': parse_mode,
+                          'disable_web_page_preview': disable_web_page_preview
+                        })
+                      }}
+                    response_variable: response
                   - alias: Store message info
                     variables:
                       message_data: >
