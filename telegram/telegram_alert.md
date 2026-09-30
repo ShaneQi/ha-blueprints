@@ -18,6 +18,7 @@ This blueprint is intended as a replacement for the [alert](<https://www.home-as
 ### 🦾 In addition, it also supports:
 - Trigger alerts based on an attribute value instead of the entity state
 - Trigger on a numeric value being either below or above a certain value
+- Trigger when the entity state is not equal to a given value
 - Add actionable buttons which will perform assigned actions
 - Optionally automatically remove previous messages for the alert when a new message is sent
 - Optionally automatically remove previous messages for the alert when the alert is done (either the entity state changed or the alert is acknowledged)
@@ -59,9 +60,10 @@ The text between brackets is the key for the input used in YAML.
   When left empty, the state of the entity will be used.
 
 * #### **Problem type** _(problem_type)_  | default: `"equal"`
-  Indicate if the entity state should exactly match the problem state, or if it should be above or below.
+  Indicate if the entity state should match the problem state, differ from it, or be above or below.
   In case above or below is used, the problem state needs to be numeric. Possible options are:
   - Entity state equal to problem state _(equal)_
+  - Entity state not equal to problem state _(not_equal)_
   - Entity state below problem state _(below)_
   - Entity state above problem state _(above)_
 
