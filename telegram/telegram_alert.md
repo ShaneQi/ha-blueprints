@@ -91,7 +91,7 @@ In case above or below is used, the problem state needs to be numeric. Possible 
   The config entry of the telegram bot to use, this is not required if you only have one Telegram bot configured.
 
 * #### **Target** _(target)_ | no default
-  The target chats to which the alerts should be sent. The selector is using the event entities as created by the Telegram bot integration. These entities have the chat id of the Telegram chat as an attribute, so in the end those chat id's are used as target of the alert messages.
+  The target chats to which the alerts should be sent. Prefer the **notify** entities created by the Telegram bot integration (one per allowed chat). The blueprint sends to those via `entity_id`. **Event** entities from the same integration are also accepted; for those the blueprint reads the `chat_id` attribute and sends with `config_entry_id` + `chat_id`.
 
 * #### **Parse mode** _(parse_mode)_ | default: `markdown`
   This will determine the formatting of the message. By default `markdown` formatting is used, but you can also select `markdownv2`, `html` and `plain_text`. Note that `markdownv2` needs escaping of special characters and will otherwise result in an error.

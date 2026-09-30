@@ -103,9 +103,9 @@ blueprint:
         target:
           name: Target
           description:
-            Select the telegram chats you want to target in this alert. The blueprint uses the event entities and
-            takes the chat_id from the attribute of these entities. Notify entities from the Telegram bot
-            integration are also supported.
+            Select the telegram chats you want to target in this alert. Prefer the notify entities created by the
+            Telegram bot integration (one per chat). Event entities are also accepted when they expose a chat_id
+            attribute.
           selector:
             entity:
               multiple: true
