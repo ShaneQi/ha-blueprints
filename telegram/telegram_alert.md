@@ -53,7 +53,7 @@ The text between brackets is the key for the input used in YAML.
 
 
 * #### **Problem state** _(problem_state)_  | no default
-  The state the trigger entity needs to change to for the alert to start. Note that if the entity is already in this state when the automation is created, the alert will not start; it has to change to the state to start the alert.
+  The value used with Problem type to decide if the alert is active. For `equal`/`not_equal` this is compared as text; for `above`/`below` it must be numeric. Note that if the entity already matches the problem condition when the automation is created, the alert will not start; the value has to change into the problem condition to start the alert.
 
 * #### **Attribute name** _(attribute_key)_  | default: `""`
   You can optionally provide an attribute name so the alert will not trigger on the state of the entity, but on an attribute value. It will use the problem state provided, in combination with the attribute name. This has to be the attribute as shown in developer tools > states, do not use the value from e.g. a more-info card, as they make changes to the name (for example the first character is capitalized).
