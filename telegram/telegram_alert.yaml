@@ -530,20 +530,22 @@ actions:
                   - alias: Store message info
                     variables:
                       message_data: >
-                        {% set chat = response.chats | first %}
-                        {# Prefer notify entity_id from the send response when present;
-                           fall back to the selected target (event or notify entity). #}
-                        {% set target_entity = chat.entity_id | default(repeat.item, true) %}
+                        {# response.chats items are Home Assistant send-response objects
+                           (chat_id, message_id, and entity_id when sent via a notify entity),
+                           not raw Telegram Chat objects. Keep the full response entry. #}
+                        {% set sent = response.chats | first %}
+                        {% set target_entity = sent.entity_id | default(repeat.item, true) %}
                         {{
                           message_data
                           + [
-                              {
-                                'chat_id': chat.chat_id,
-                                'message_id': chat.message_id,
-                                'config_entry_id': config_entry_id(target_entity),
-                                'event_entity': repeat.item,
-                                'id': message_data | count + 1
-                              }
+                              sent
+                                | combine(
+                                    dict(
+                                      config_entry_id=config_entry_id(target_entity),
+                                      event_entity=repeat.item,
+                                      id=message_data | count + 1
+                                    )
+                                  )
                             ]
                         }}
         - alias: Send alert data to sensor if provided
