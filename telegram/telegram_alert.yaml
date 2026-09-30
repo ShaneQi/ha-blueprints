@@ -615,24 +615,18 @@ actions:
                       - variables:
                           config_entry: "{{ wait.trigger.event.data.bot.config_entry_id }}"
                           chat_id: "{{ wait.trigger.event.data.chat_id }}"
-                          entity_id: >
-                            {% set ns = namespace(entity='') %}
+                          chat_messages: >
+                            {% set ns = namespace(items=[]) %}
                             {% for item in message_data %}
                               {% if item.config_entry_id == config_entry and item.chat_id | string == chat_id | string %}
-                                {% set ns.entity = item.entity_id %}
+                                {% set ns.items = ns.items + [item] %}
                               {% endif %}
                             {% endfor %}
-                            {% if not ns.entity %}
-                              {% for event in target %}
-                                {% if state_attr(event, 'chat_id') is not none and config_entry_id(event) == config_entry and state_attr(event, 'chat_id') | string == chat_id | string %}
-                                  {% set ns.entity = event %}
-                                {% endif %}
-                              {% endfor %}
-                            {% endif %}
-                            {{ ns.entity }}
+                            {{ ns.items }}
+                          entity_id: "{{ chat_messages[0].entity_id if chat_messages | count > 0 else '' }}"
                       - alias: Delete previously for this chat if there were any
                         repeat:
-                          for_each: "{{ message_data | selectattr('entity_id', 'eq', entity_id) | list if remove_when_done else [] }}"
+                          for_each: "{{ chat_messages if remove_when_done else [] }}"
                           sequence: *delete_message
                       - alias: Send alert data to sensor if provided
                         if: "{{ alert_data_sensor is not none }}"
@@ -655,7 +649,7 @@ actions:
                               disable_web_page_preview: !input disable_web_page_preview
                       - alias: Remove this entry from the recipient list
                         variables:
-                          target: "{{ target | reject('eq', entity_id) | list }}"
+                          target: "{{ target | reject('eq', entity_id) | list if entity_id else target }}"
                           repeat_needed: "{{ target | count > 0 }}"
                       - if: "{{ not repeat_needed }}"
                         then:
