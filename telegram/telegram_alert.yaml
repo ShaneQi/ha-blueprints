@@ -43,7 +43,7 @@ blueprint:
             entity: {}
         problem_state:
           name: Problem state
-          description: The state on which the enitity should be for the alert to be actvie
+          description: The state on which the entity should be for the alert to be active
           selector:
             text:
         attribute_key:
