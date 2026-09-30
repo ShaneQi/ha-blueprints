@@ -18,6 +18,7 @@ This blueprint is intended as a replacement for the [alert](<https://www.home-as
 ### 🦾 In addition, it also supports:
 - Trigger alerts based on an attribute value instead of the entity state
 - Trigger on a numeric value being either below or above a certain value
+- Trigger when the entity state is not equal to a given value
 - Add actionable buttons which will perform assigned actions
 - Optionally automatically remove previous messages for the alert when a new message is sent
 - Optionally automatically remove previous messages for the alert when the alert is done (either the entity state changed or the alert is acknowledged)
@@ -52,16 +53,17 @@ The text between brackets is the key for the input used in YAML.
 
 
 * #### **Problem state** _(problem_state)_  | no default
-  The state the trigger entity needs to change to for the alert to start. Note that if the entity is already in this state when the automation is created, the alert will not start; it has to change to the state to start the alert.
+  The value used with Problem type to decide if the alert is active. For `equal`/`not_equal` this is compared as text; for `above`/`below` it must be numeric. Note that if the entity already matches the problem condition when the automation is created, the alert will not start; the value has to change into the problem condition to start the alert.
 
 * #### **Attribute name** _(attribute_key)_  | default: `""`
   You can optionally provide an attribute name so the alert will not trigger on the state of the entity, but on an attribute value. It will use the problem state provided, in combination with the attribute name. This has to be the attribute as shown in developer tools > states, do not use the value from e.g. a more-info card, as they make changes to the name (for example the first character is capitalized).
   When left empty, the state of the entity will be used.
 
 * #### **Problem type** _(problem_type)_  | default: `"equal"`
-  Indicate if the entity state should exactly match the problem state, or if it should be above or below.
+  Indicate if the entity state should match the problem state, differ from it, or be above or below.
   In case above or below is used, the problem state needs to be numeric. Possible options are:
   - Entity state equal to problem state _(equal)_
+  - Entity state not equal to problem state _(not_equal)_
   - Entity state below problem state _(below)_
   - Entity state above problem state _(above)_
 
